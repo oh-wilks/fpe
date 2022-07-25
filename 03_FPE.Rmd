@@ -65,8 +65,36 @@ ec_lm(df$x, df$y, length(df$x))
 
 
 ```
-
 r. Ecuacion: y = 14.87 - 1.86 x 
+
+
+c) Calcule el coeficiente de correlación de la muestra e interprete el significado del coeficiente en este ejercicio.
+
+```{r}
+
+
+reg_lm <- function(x,y,n){
+  x2 <- x**2
+  y2 <- y**2
+  xy <- x*y
+  s_x2 <- sum(x2)
+  s_y2 <- sum(y2)
+  s_xy <- sum(xy)
+  s_x <- sum(x)
+  s_y <- sum(y)
+  
+  r <- ((n * s_xy - (s_x * s_y))**2)/
+    ((n * s_x2 - s_x**2)*(n * s_y2 - s_y**2))
+  return(print(paste("coeficiente = ", r,
+                sep = "")))
+}
+
+reg_lm(df$x, df$y, length(df$x))
+print("Coeficiente de Pearson:")
+cor(df$x, df$y, method = "pearson")
+```
+
+
 
 d) Si hay 15 banqueros atendiendo, ¿cuál será el tiempo de espera de la persona para ver a su banquero?
 
@@ -76,10 +104,10 @@ lin_r <- function(a,b,x){
   return(a + b * x)
 }
 d <- lin_r(14.8702702702703,-1.86036036036036,15)
-d
+print(d)
 ```
 
-r. El tiempo de espera seria `d toString(d)` minutos, en otras palabras, no habria tiempo de espera. 
+r. El tiempo de espera seria -13.03 minutos, en otras palabras, no habria tiempo de espera. 
 
 2. La Stork Foundation desea mostrar con estadísticas que, contrariamente a la creencia popular, las cigüeñas no traen a los bebés. Para esto ha recolectado datos sobre el número de cigüeñas y el números de bebes (ambos en miles) en varias ciudades de Europa.
 
@@ -103,7 +131,8 @@ plt_2 <- df2 %>%
   labs(title = "Actividad 3",
        subtitle = "Regresion y Correlacion",
        x = "cigüeñas",
-       y = "bebes") 
+       y = "bebes", 
+       caption = "Correlacion directa,\n Entre mas cigueñas mas bebes") 
 print(plt_2)
 ```
 
@@ -117,29 +146,14 @@ ec_lm(df2$cigüeñas, df2$bebes, length(df2$cigüeñas))
 
 ```
 
-r. Ecuacion: y = 7661.61 - 1.01 x 
+r. Ecuacion: y = 7661.61 + 1.01 x 
 
 c) Calcule el coeficiente de correlación de la muestra e interprete el significado del coeficiente en este ejercicio.
 
 ```{r}
 
-reg_lm <- function(x,y,n){
-  x2 <- x**2
-  y2 <- y**2
-  xy <- x*y
-  s_x2 <- sum(x2)
-  s_y2 <- sum(y2)
-  s_xy <- sum(xy)
-  s_x <- sum(x)
-  s_y <- sum(y)
-  
-  r <- ((n * s_xy - (s_x * s_y))**2)/
-    ((n * s_x2 - s_x**2)*(n * s_y2 - s_y**2))
-  return(print(paste("coeficiente = ", r,
-                sep = "")))
-}
-
 reg_lm(df2$cigüeñas, df2$bebes, length(df2$bebes))
+cor(df2$cigüeñas, df2$bebes, method = "pearson")
 
 ```
 
