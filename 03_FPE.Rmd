@@ -1,0 +1,151 @@
+---
+title: "Actividad 3"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
+---
+Objetivo:
+
+Aplicar el análisis de regresión y correlación, con el objetivo de que el alumno sea capaz de emplear dichos conceptos de análisis y conclusión en la vida empresarial.
+
+1. El Bank of Lincoln está interesado en reducir el tiempo en que las personas esperan para ver a su banquero personal. También les interesa la relación entre el tiempo de espera en minutos y el número de banqueros atendiendo. Los clientes se seleccionan al azar con los datos siguientes:
+
+
+```{r}
+library("tidyverse")
+library("ggthemes")
+library("ggbreak")
+library("ggpubr")
+
+x <- c(2,3,5,4,2,6,1,3,4,3,3)
+y <- c(12.8,11.3,3.2,6.4,11.6,3.2,8.7,10.5,8.2,11.3,9.4)
+df <- data.frame(x, y)
+n <- length(df$x)
+
+print(df)
+
+```
+a) Trace el diagrama de dispersión. ¿Qué tipo de relación tienen los datos?
+
+r. La dispersion es lineal inversa
+
+```{r}
+plt_sc <- df %>%  
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = lm) +
+  theme_bw() +
+  scale_x_continuous(breaks = seq(from = 1, to = n, by = 1)) +
+  labs(title = "Actividad 3",
+       subtitle = "Regresion y Correlacion",
+       x = "# de banqueros",
+       y = "tiempo de espera",
+       caption = "Dispersion lineal Inversa. \nEntre mas banqueros menor tiempo de espera") 
+print(plt_sc)
+```
+
+b) Calcule la ecuación de regresión que mejor se ajuste a estos datos.
+
+
+```{r}
+# funcion para calcular la ecuacion de regresion lineal
+ec_lm <- function(x,y,n){
+  x2 <- x**2
+  xy <- x*y
+  s_x2 <- sum(x2)
+  s_xy <- sum(xy)
+  b <- (s_xy - n*mean(x)*mean(y))/(s_x2 - n*mean(x)**2)
+  a <- mean(y) - b * mean(x)
+  return(print(paste("a = ", a,
+               ", b = ", b, sep = "")))
+}
+ec_lm(df$x, df$y, length(df$x))
+
+
+```
+
+r. Ecuacion: y = 14.87 - 1.86 x 
+
+d) Si hay 15 banqueros atendiendo, ¿cuál será el tiempo de espera de la persona para ver a su banquero?
+
+
+```{r}
+lin_r <- function(a,b,x){
+  return(a + b * x)
+}
+d <- lin_r(14.8702702702703,-1.86036036036036,15)
+d
+```
+
+r. El tiempo de espera seria `d toString(d)` minutos, en otras palabras, no habria tiempo de espera. 
+
+2. La Stork Foundation desea mostrar con estadísticas que, contrariamente a la creencia popular, las cigüeñas no traen a los bebés. Para esto ha recolectado datos sobre el número de cigüeñas y el números de bebes (ambos en miles) en varias ciudades de Europa.
+
+```{r}
+cigüeñas <- c(27,38,13,24,6,19,15) *1000
+bebes <- c(35,46,19,32,15,31,20)*1000
+df2 <- data.frame(cigüeñas, bebes)
+print(df2)
+
+```
+a) Trace el diagrama de dispersión. ¿Qué tipo de relación tienen los datos? 
+
+r. Los datos tienen una correlacion directa. 
+
+```{r}
+plt_2 <- df2 %>%  
+  ggplot(aes(x = cigüeñas, y = bebes)) +
+  geom_point() +
+  geom_smooth(method = lm) +
+  theme_bw() +
+  labs(title = "Actividad 3",
+       subtitle = "Regresion y Correlacion",
+       x = "cigüeñas",
+       y = "bebes") 
+print(plt_2)
+```
+
+
+b) Calcule la ecuación de regresión que mejor se ajuste a estos datos.
+
+```{r}
+
+# reusando la funcion creada en el primer ejercicio
+ec_lm(df2$cigüeñas, df2$bebes, length(df2$cigüeñas))
+
+```
+
+r. Ecuacion: y = 7661.61 - 1.01 x 
+
+c) Calcule el coeficiente de correlación de la muestra e interprete el significado del coeficiente en este ejercicio.
+
+```{r}
+
+reg_lm <- function(x,y,n){
+  x2 <- x**2
+  y2 <- y**2
+  xy <- x*y
+  s_x2 <- sum(x2)
+  s_y2 <- sum(y2)
+  s_xy <- sum(xy)
+  s_x <- sum(x)
+  s_y <- sum(y)
+  
+  r <- ((n * s_xy - (s_x * s_y))**2)/
+    ((n * s_x2 - s_x**2)*(n * s_y2 - s_y**2))
+  return(print(paste("coeficiente = ", r,
+                sep = "")))
+}
+
+reg_lm(df2$cigüeñas, df2$bebes, length(df2$bebes))
+
+```
+
+r. El coeficiente de regresion es 0.9580
+
+
+d) ¿Contradijo la ciencia estadística la creencia popular?
+
+r. No, la creencia concuerda con la ciencia. 
